@@ -14,11 +14,15 @@ Not fully implemented but shows how logging could be pushed to App Insights
 
 
 ### Structure
+https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/ddd-oriented-microservice
 #### AFI.API
 API project - consumes all lower level projects to become the endpoint (point of contact)
+
 #### AFI.Domain
-#### AFI.Persistance
-This project is concerned with Database storage and retrieval. It is a Code First migration .NET Core application.
+This project is concerned with aggregating data from the persistence layer to output from the API.
+
+#### AFI.Persistence
+This project is concerned with Database storage and retrieval. It is a Code First migration .NET Core application. The repository pattern can be used to aggregate Domain models in to single units of work.
 
 ## DB Migrations
 Open a command prompt and navigate to the AFI.Persistance folder.

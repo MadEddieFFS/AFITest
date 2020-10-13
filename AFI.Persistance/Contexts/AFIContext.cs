@@ -7,17 +7,23 @@ namespace AFI.Persistance.Contexts
 {
     public class AFIContext : DbContext
     {
-        private readonly IConfiguration configuration;
+        private readonly IConfiguration _configuration;
+        public AFIContext()
+        {        }
 
         public AFIContext(IConfiguration configuration)
         {
-            this.configuration = configuration;
+            _configuration = configuration;
+        }
+        public AFIContext(DbContextOptions<AFIContext> options)
+        : base(options)
+        {
         }
 
         public AFIContext(DbContextOptions<AFIContext> options, IConfiguration configuration)
         : base(options)
         {
-            this.configuration = configuration;
+            _configuration = configuration;
         }
 
 
@@ -27,7 +33,7 @@ namespace AFI.Persistance.Contexts
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(configuration["databaseconnectionstring"]);
+                optionsBuilder.UseSqlServer(_configuration["databaseconnectionstring"]);
             }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -38,7 +44,10 @@ namespace AFI.Persistance.Contexts
             base.OnModelCreating(modelBuilder);
         }
 
-
+        public override int SaveChanges()
+        {
+            return base.SaveChanges();
+        }
 
         #region Entity creation
         private ModelBuilder ConfigurePolicyHolder(ModelBuilder modelBuilder)

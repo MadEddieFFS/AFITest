@@ -7,12 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AFI.Domain", "AFI.Domain\AF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AFI.Persistance", "AFI.Persistance\AFI.Persistance.csproj", "{7A3365C5-3377-43BD-A4CD-16AEC405AF3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AFI.API", "AFI.API\AFI.API.csproj", "{741EBC1A-5DC1-4B4B-BC65-17C0A27A767F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AFI.API", "AFI.API\AFI.API.csproj", "{741EBC1A-5DC1-4B4B-BC65-17C0A27A767F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{7677882C-AF39-4C7B-A3C6-DA4131DA438F}"
 	ProjectSection(SolutionItems) = preProject
 		AFI Documentation.md = AFI Documentation.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AFI.Test", "AFI.Test\AFI.Test.csproj", "{9054027A-3B98-438A-A20F-A554F8C19BB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,10 @@ Global
 		{741EBC1A-5DC1-4B4B-BC65-17C0A27A767F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{741EBC1A-5DC1-4B4B-BC65-17C0A27A767F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{741EBC1A-5DC1-4B4B-BC65-17C0A27A767F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9054027A-3B98-438A-A20F-A554F8C19BB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9054027A-3B98-438A-A20F-A554F8C19BB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9054027A-3B98-438A-A20F-A554F8C19BB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9054027A-3B98-438A-A20F-A554F8C19BB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

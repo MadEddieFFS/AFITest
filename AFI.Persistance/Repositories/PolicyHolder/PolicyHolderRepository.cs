@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AFI.Domain.Repositories.Base;
 
 namespace AFI.Persistance.Repositories.PolicyHolders
 {
-    public class PolicyHolderRepository : BaseRepository<AFIContext, PolicyHolder>, IPolicyHolderRepository
+    public class PolicyHolderRepository : BaseRepository<PolicyHolder>, IPolicyHolderRepository
     {
-
         public PolicyHolderRepository(AFIContext context) : base(context) { }
 
         public Task AddRangeAsync(IEnumerable<PolicyHolder> entities)

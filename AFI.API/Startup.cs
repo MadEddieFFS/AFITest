@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AFI.Domain.Repositories.PolicyHolders;
 using AFI.Persistance.Contexts;
+using AFI.Persistance.Repositories.PolicyHolders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
@@ -61,6 +63,7 @@ namespace AFI.API
             ConfigureSwagger(services);
             ConfigureDataContexts(services);
             ConfigureApplicationInsights(services);
+            ConfigureIoC(services);
 
             services.AddControllers();
         }
@@ -119,7 +122,7 @@ namespace AFI.API
                     }
                 });
 
-
+                options.EnableAnnotations();
             });
         }
         public void ConfigureDataContexts(IServiceCollection services)
@@ -131,6 +134,10 @@ namespace AFI.API
         public void ConfigureApplicationInsights(IServiceCollection services)
         {
             services.AddApplicationInsightsTelemetry();
+        }
+        public void ConfigureIoC(IServiceCollection services)
+        {
+            services.AddScoped<IPolicyHolderRepository, PolicyHolderRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
