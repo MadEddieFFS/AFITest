@@ -14,6 +14,15 @@ namespace AFI.Persistance.Repositories.PolicyHolders
     {
         public PolicyHolderRepository(AFIContext context) : base(context) { }
 
+        public async Task<PolicyHolder> AddEdit(PolicyHolder PolicyHolder)
+        {
+            this._context.PolicyHolder.Attach(PolicyHolder);
+
+            await this._context.SaveChangesAsync();
+
+            return PolicyHolder;
+        }
+
         public Task AddRangeAsync(IEnumerable<PolicyHolder> entities)
         {
             throw new NotImplementedException();

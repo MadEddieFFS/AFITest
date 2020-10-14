@@ -45,8 +45,17 @@ namespace AFI.API.Controllers.PolicyHolder
                 return BadRequest();
             }
 
+            // Save
+            Domain.Models.PolicyHolders.PolicyHolder Result = await this._policyHolderRepository.AddEdit(new Domain.Models.PolicyHolders.PolicyHolder
+            {
+                DateOfBirth = request.DateOfBirth,
+                EMail = request.EMail,
+                Forename = request.Forename,
+                ReferenceNumber = request.ReferenceNumber,
+                Surname = request.Surname
+            });
 
-            return Ok();
+            return Ok(Result.Id);
         }
     }
 }

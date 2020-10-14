@@ -21,9 +21,10 @@ namespace AFI.Persistance.Migrations
 
             modelBuilder.Entity("AFI.Domain.Models.PolicyHolders.PolicyHolder", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<Guid>("CreatedByUserId")
                         .HasColumnType("uniqueidentifier");
@@ -45,12 +46,6 @@ namespace AFI.Persistance.Migrations
 
                     b.Property<Guid?>("LastEditedByUserId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("PolicyId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PolicyNumber")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReferenceNumber")
                         .HasColumnType("nvarchar(max)");

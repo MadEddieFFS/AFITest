@@ -10,8 +10,6 @@ namespace AFI.Domain.Models.PolicyHolders
     [Table("PolicyHolder")]
     public class PolicyHolder : BaseEntity
     {
-        public int PolicyId { get; set; }
-        public string PolicyNumber { get; set; }
         public string Forename { get; set; }
         public string Surname { get; set; }
         public string ReferenceNumber { get; set; }

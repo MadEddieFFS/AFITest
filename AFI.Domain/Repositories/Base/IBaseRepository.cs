@@ -9,7 +9,7 @@ namespace AFI.Domain.Repositories.Base
 {
     public interface IBaseRepository<T> where T : BaseEntity
     {
-        Task<T> FindByIdAsync(Guid id);
+        Task<T> FindByIdAsync(int id);
         Task Insert(T entity);
     }
 }

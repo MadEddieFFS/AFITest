@@ -11,13 +11,12 @@ namespace AFI.Persistance.Migrations
                 name: "PolicyHolder",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedByUserId = table.Column<Guid>(nullable: false),
                     LastEditedByUserId = table.Column<Guid>(nullable: true),
                     CreatedUTC = table.Column<DateTime>(nullable: false),
                     EditedUTC = table.Column<DateTime>(nullable: true),
-                    PolicyId = table.Column<int>(nullable: false),
-                    PolicyNumber = table.Column<string>(nullable: true),
                     Forename = table.Column<string>(nullable: true),
                     Surname = table.Column<string>(nullable: true),
                     ReferenceNumber = table.Column<string>(nullable: true),

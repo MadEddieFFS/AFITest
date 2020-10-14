@@ -3,59 +3,65 @@ using AFI.Domain.Repositories.PolicyHolders;
 using AFI.Persistance.Contexts;
 using AFI.Persistance.Repositories.PolicyHolders;
 using AFI.Test.TestHelpers;
-using Castle.Core.Configuration;
-using Moq;
-using NUnit.Framework;
+using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace AFI.Test.Persistence
 {
-    [TestFixture]
     public class BaseRepositoryTest
     {
-        private AFIContext _dbContext;
-        private IPolicyHolderRepository _repo;
+        private IServiceProvider _provider;
 
-        [SetUp]
-        public void Setup()
+        public BaseRepositoryTest()
         {
-            _dbContext = new InMemoryDbContextFactory().GetAFIContext();
-            _repo = new PolicyHolderRepository(this._dbContext);
+            var services = new ServiceCollection();
+            services.AddDbContext<AFIContext>(options => options.UseInMemoryDatabase($"afi-db-{Guid.NewGuid()}"), ServiceLifetime.Transient);
+            _provider = services.BuildServiceProvider();
         }
 
 
-        [Test]
+        [Fact]
         public async Task BaseRepositoryTest_FindByID()
         {
             // Arrange
-            Guid TestID = Guid.Parse("0C05CA6D-AC82-4577-BCF3-9EBEC29F5268");
+            var db = _provider.GetService<AFIContext>();
+            var repo = new PolicyHolderRepository(db);
+
+            int TestID = 1;
             Guid CreatedByUserId = Guid.Parse("D9FE4F17-306D-4B40-A2F1-0A960ECC4A8C");
             string ExpectedReference = "TEST 1";
 
-            _dbContext.PolicyHolder.Add(new Domain.Models.PolicyHolders.PolicyHolder
+            db.PolicyHolder.Add(new Domain.Models.PolicyHolders.PolicyHolder
             {
                 CreatedByUserId = CreatedByUserId,
                 CreatedUTC = DateTime.UtcNow.AddDays(-1),
                 Id = TestID,
                 ReferenceNumber = ExpectedReference
             });
-            _dbContext.SaveChanges();
+            db.SaveChanges();
 
             // Act
-            var results = await _repo.FindByIdAsync(TestID);
+            var results = await repo.FindByIdAsync(TestID);
 
             // Assert
-            Assert.IsNotNull(results);
-            Assert.AreEqual(results.Id, TestID);
-            Assert.AreEqual(results.ReferenceNumber, ExpectedReference);
+            results.Should().NotBeNull();
+            results.Id.Should().Equals(TestID);
+            results.ReferenceNumber.Should().Equals(ExpectedReference);
         }
 
 
-        [Test]
-        public void BaseRepository_Insert()
+        [Fact]
+        public async Task BaseRepository_Insert()
         {
             // Arrange
+            var db = _provider.GetService<AFIContext>();
+            var repo = new PolicyHolderRepository(db);
+
             string ExpectedReference = "TEST 1";
             PolicyHolder PolicyHolder = new PolicyHolder
             {
@@ -65,9 +71,10 @@ namespace AFI.Test.Persistence
             };
 
             // Act
-            
+            Action act = () => repo.Insert(PolicyHolder).Wait();
+
             // Assert
-            Assert.DoesNotThrowAsync(() => { return _repo.Insert(PolicyHolder); });
+            act.Should().NotThrow<Exception>();
         }
     }
 }

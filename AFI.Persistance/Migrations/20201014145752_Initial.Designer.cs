@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AFI.Persistance.Migrations
 {
     [DbContext(typeof(AFIContext))]
-    [Migration("20201012204129_Initial")]
+    [Migration("20201014145752_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,9 +23,10 @@ namespace AFI.Persistance.Migrations
 
             modelBuilder.Entity("AFI.Domain.Models.PolicyHolders.PolicyHolder", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<Guid>("CreatedByUserId")
                         .HasColumnType("uniqueidentifier");
@@ -47,12 +48,6 @@ namespace AFI.Persistance.Migrations
 
                     b.Property<Guid?>("LastEditedByUserId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("PolicyId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PolicyNumber")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReferenceNumber")
                         .HasColumnType("nvarchar(max)");

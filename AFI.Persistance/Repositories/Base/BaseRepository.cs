@@ -24,7 +24,7 @@ namespace AFI.Persistance.Repositories.Base
             this._entities = context.Set<T>();
         }
 
-        public virtual async Task<T> FindByIdAsync(Guid id)
+        public virtual async Task<T> FindByIdAsync(int id)
         {
             return await this._entities.SingleOrDefaultAsync(entity => entity.Id == id);
         }

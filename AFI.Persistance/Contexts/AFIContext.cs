@@ -55,10 +55,6 @@ namespace AFI.Persistance.Contexts
             modelBuilder.ConfigureBaseEntity<PolicyHolder>("PolicyHolder", "app")
                 .Entity<PolicyHolder>(entity =>
                 {
-                    entity.HasIndex(e => e.PolicyId);
-                    entity.Property(e => e.PolicyId)
-                    .IsRequired();
-
                     entity.Property(e => e.DateOfBirth)
                     .IsRequired(false);
 
@@ -69,10 +65,6 @@ namespace AFI.Persistance.Contexts
                     entity.Property(e => e.Forename)
                     .IsRequired()
                     .HasMaxLength(50);
-
-                    entity.Property(e => e.PolicyNumber)
-                    .IsRequired()
-                    .HasMaxLength(9);
 
                     entity.Property(e => e.ReferenceNumber)
                     .IsRequired()

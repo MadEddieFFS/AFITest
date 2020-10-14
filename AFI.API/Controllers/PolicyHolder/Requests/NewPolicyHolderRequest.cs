@@ -42,21 +42,21 @@ namespace AFI.API.Controllers.PolicyHolder.Requests
 
                 //*** Reference number is required and must match reg ex
                 // Test with
-                // XX - 444444
+                // XX-444444
                 // 933444555
-                // X - 3334444
-                // XX - 22223
-                // XX - 22222A
-                // XX - 2122222
+                // X-3334444
+                // XX-22223
+                // XX-22222A
+                // XX-2122222
 
-                var ReferenceRegexPattern = @"/[A-Z]{2}-[[0-9]{6}$";
+                var ReferenceRegexPattern = @"^[A-Z]{2}-[0-9]{6}$";
                 if (string.IsNullOrEmpty(this.ReferenceNumber) || !Regex.IsMatch(this.ReferenceNumber, ReferenceRegexPattern))
                 {
                     return false;
                 }
 
                 bool ValidEMail = false;
-                var EMailRegexPattern = @"/\w{4,}@\w{2,}(.com|.co.uk)$";
+                var EMailRegexPattern = @"\w{4,}@\w{2,}(.com|.co.uk)$";
                 // Is EMail address valid?
                 // Reg Ex tests
                 // 1234@test.com
@@ -67,16 +67,16 @@ namespace AFI.API.Controllers.PolicyHolder.Requests
                 // 1234@a.co.uk
                 // 1234@12.co.uk1
                 // 1234@12.com1
-                if (string.IsNullOrEmpty(this.EMail) || !Regex.IsMatch(this.EMail, EMailRegexPattern))
+                if (!string.IsNullOrEmpty(this.EMail) && Regex.IsMatch(this.EMail, EMailRegexPattern))
                 {
-                    ValidEMail = false;
+                    ValidEMail = true;
                 }
 
                 bool ValidDOB = false;
                 // New registering user must be 18
-                if (!this.DateOfBirth.HasValue || this.DateOfBirth.Value.AddYears(-18) < DateTime.Now.AddYears(-18))
+                if (this.DateOfBirth.HasValue && this.DateOfBirth.Value < DateTime.Now.AddYears(-18))
                 {
-                    ValidDOB = false;
+                    ValidDOB = true;
                 }
 
                 // Documentation suggests that EITHER the policy holders DOB OR the poliy Holders EMail is part of the registration requirement
