@@ -11,10 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AFI.API", "AFI.API\AFI.API.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{7677882C-AF39-4C7B-A3C6-DA4131DA438F}"
 	ProjectSection(SolutionItems) = preProject
-		AFI Documentation.md = AFI Documentation.md
+		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AFI.Test", "AFI.Test\AFI.Test.csproj", "{9054027A-3B98-438A-A20F-A554F8C19BB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AFI.Test", "AFI.Test\AFI.Test.csproj", "{9054027A-3B98-438A-A20F-A554F8C19BB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
