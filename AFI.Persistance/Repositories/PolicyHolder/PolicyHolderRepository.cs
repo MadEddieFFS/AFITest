@@ -16,11 +16,18 @@ namespace AFI.Persistance.Repositories.PolicyHolders
 
         public async Task<PolicyHolder> AddEdit(PolicyHolder PolicyHolder)
         {
-            this._context.PolicyHolder.Attach(PolicyHolder);
+            try
+            {
+                this._context.PolicyHolder.Attach(PolicyHolder);
 
-            await this._context.SaveChangesAsync();
+                await this._context.SaveChangesAsync();
 
-            return PolicyHolder;
+                return PolicyHolder;
+            }catch(Exception e)
+            {
+                // Log
+                return null;
+            }
         }
 
         public Task AddRangeAsync(IEnumerable<PolicyHolder> entities)

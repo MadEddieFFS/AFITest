@@ -6,6 +6,7 @@ namespace AFI.Domain.Repositories.PolicyHolders
 {
     public interface  IPolicyHolderRepository: IBaseRepository<PolicyHolder>
     {
+        // Potentially enforce constraint to avoid duplicate entries
         public Task<PolicyHolder> AddEdit(PolicyHolder PolicyHolder);
 
     }
