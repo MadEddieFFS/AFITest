@@ -6,6 +6,8 @@ using AFI.Persistance.Repositories.PolicyHolders;
 using AFI.Test.TestHelpers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
@@ -20,7 +22,7 @@ namespace AFI.Test.API.Controllers.PolicyHolder
         private IPolicyHolderRepository _repo;
         private Mock<ILogger<PolicyHolderController>> _logger;
         private PolicyHolderController _controller;
-
+        private IServiceProvider _provider;
 
         public PolicyHolderControllerTests()
         {
@@ -28,6 +30,10 @@ namespace AFI.Test.API.Controllers.PolicyHolder
             this._repo = new PolicyHolderRepository(this._dbContext);
             this._logger = new Mock<ILogger<PolicyHolderController>>();
             this._controller = new PolicyHolderController(this._repo, this._logger.Object);
+
+            var services = new ServiceCollection();
+            services.AddDbContext<AFIContext>(options => options.UseInMemoryDatabase($"afi-db-{Guid.NewGuid()}"), ServiceLifetime.Transient);
+            _provider = services.BuildServiceProvider();
         }
 
         [Fact]
@@ -101,6 +107,10 @@ namespace AFI.Test.API.Controllers.PolicyHolder
         public async Task PolicyHolderControllerTests_Post_Validation_EMail_Success(string EMail)
         {
             // Arrange
+            var db = _provider.GetService<AFIContext>();
+            var repo = new PolicyHolderRepository(db);
+            var controller = new PolicyHolderController(repo, this._logger.Object);
+
             NewPolicyHolderRequest request = new NewPolicyHolderRequest
             {
                 EMail = EMail,
@@ -110,16 +120,21 @@ namespace AFI.Test.API.Controllers.PolicyHolder
             };
 
             // Act
-            var result = await this._controller.CreatePolicyHolder(request);
 
             // Assert
-            result.Should().NotBeNull().And.BeOfType(typeof(OkResult));
+            var result = controller.CreatePolicyHolder(request).Result as OkObjectResult;
+            result.Should().NotBeNull().And.BeOfType(typeof(OkObjectResult));
+            result.Value.Should().BeOfType(typeof(int))
+               .And.Be(expected: 1, because: "It should be the only record in the database and thus first identity created");
         }
 
         [Fact]
         public async Task PolicyHolderControllerTests_Post_Validation_DOB_Success()
         {
             // Arrange
+            var db = _provider.GetService<AFIContext>();
+            var repo = new PolicyHolderRepository(db);
+            var controller = new PolicyHolderController(repo, this._logger.Object);
             NewPolicyHolderRequest request = new NewPolicyHolderRequest
             {
                 DateOfBirth = DateTime.Now.AddYears(-40),
@@ -129,10 +144,12 @@ namespace AFI.Test.API.Controllers.PolicyHolder
             };
 
             // Act
-            var result = await this._controller.CreatePolicyHolder(request);
-
+          
             // Assert
-            result.Should().NotBeNull().And.BeOfType(typeof(OkResult));
+            var result = controller.CreatePolicyHolder(request).Result as OkObjectResult;
+            result.Should().NotBeNull();
+            result.Value.Should().BeOfType(typeof(int))
+                .And.Be(expected: 1, because: "It should be the only record in the database and thus first identity created");
         }
 
         [Theory]
@@ -184,6 +201,9 @@ namespace AFI.Test.API.Controllers.PolicyHolder
         public async Task PolicyHolderControllerTests_Post_Create_Success()
         {
             // Arrange
+            var db = _provider.GetService<AFIContext>();
+            var repo = new PolicyHolderRepository(db);
+            var controller = new PolicyHolderController(repo, this._logger.Object);
             NewPolicyHolderRequest request = new NewPolicyHolderRequest
             {
                 DateOfBirth = DateTime.Now.AddYears(-40),
@@ -195,7 +215,7 @@ namespace AFI.Test.API.Controllers.PolicyHolder
             // Act
 
             // Assert
-            var result = this._controller.CreatePolicyHolder(request).Result as OkObjectResult;
+            var result = controller.CreatePolicyHolder(request).Result as OkObjectResult;
             result.Should().NotBeNull();
             result.Value.Should().BeOfType(typeof(int))
                 .And.Be(expected: 1, because: "It should be the only record in the database and thus first identity created");
