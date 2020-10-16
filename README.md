@@ -75,3 +75,5 @@ I would fully implement SeriLog to output to a variety of sinks. Such as perhaps
 I would consider the use of HSTS and HTTP/S redirection.
 
 I would correct all stylecop issues and use a company wide ruleset.
+
+I would consider logging database changes within audit tables.

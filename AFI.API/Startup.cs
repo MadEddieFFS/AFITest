@@ -67,6 +67,7 @@ namespace AFI.API
         {
             this.ConfigureVersioning(services);
             this.ConfigureCors(services);
+            this.ConfigureDataContexts(services);
             this.ConfigureSwagger(services);
             this.ConfigureApplicationInsights(services);
             this.ConfigureIoC(services);
