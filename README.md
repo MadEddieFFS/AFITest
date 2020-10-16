@@ -40,6 +40,9 @@ This project is concerned with aggregating data from the persistence layer to ou
 #### AFI.Persistence
 This project is concerned with Database storage and retrieval. It is a Code First migration .NET Core application. The repository pattern can be used to aggregate Domain models in to single units of work.
 
+#### AFI.Test
+This is the .NET Core unit testing project for the entire solution. Folder structre mirrors projects. Please see section below.
+
 ## DB Migrations
 Open a command prompt and navigate to the AFI.Persistance folder.
 
@@ -55,6 +58,8 @@ To run migrations:
 Uses XUnit, Fluent Assertions and Coverlet( to collect code coverage)
 To Test in CMD:
 `dotnet test`
+and to collect code coverage
+`dotnet test --collect:"XPlat Code Coverage"`
 
 ## Considerations
 The API endpoint (referring to single controller and endpoint for this test) will only return a 200 or 400 message. It is bad practice to identity validation failures when dealing with security/GDPR data. Any exceptions will not be returned.
@@ -65,4 +70,8 @@ The Unit Testing is a flavour of what would be required. Within the timescale of
 
 I would normally create a full Base Entity and Base Repository to inherit from. This is a example implementation.
 
-I would fully implement SeriLog to output to a variety of sinks. Such as perhaps Application Insights, DataDog, local XML files(not recommended), Elastic Stack, SQL database
+I would fully implement SeriLog to output to a variety of sinks. Such as perhaps Application Insights, DataDog, local XML files(not recommended), Elastic Stack, SQL database.
+
+I would consider the use of HSTS and HTTP/S redirection.
+
+I would correct all stylecop issues and use a company wide ruleset.
