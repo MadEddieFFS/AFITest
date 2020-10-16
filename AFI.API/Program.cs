@@ -1,11 +1,15 @@
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using Serilog;
-using System;
+// <copyright file="Program.cs" company="Mad Eddie Designs">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace AFI.API
 {
+    using System;
+    using Microsoft.AspNetCore;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Hosting;
+    using Serilog;
+
     public class Program
     {
         public static void Main(string[] args)

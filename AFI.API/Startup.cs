@@ -1,45 +1,48 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AFI.Domain.Repositories.PolicyHolders;
-using AFI.Persistance.Contexts;
-using AFI.Persistance.Repositories.PolicyHolders;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server.Features;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using Serilog;
+// <copyright file="Startup.cs" company="Mad Eddie Designs">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace AFI.API
 {
+    using System;
+    using AFI.Domain.Repositories.PolicyHolders;
+    using AFI.Persistance.Contexts;
+    using AFI.Persistance.Repositories.PolicyHolders;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Hosting.Server.Features;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.OpenApi.Models;
+    using Serilog;
+
+    /// <summary>
+    /// Class name.
+    /// </summary>
     public class Startup
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
-            Environment = environment;
+            this.Environment = environment;
 
             var b2 = new ConfigurationBuilder()
-               .SetBasePath(Environment.ContentRootPath)
+               .SetBasePath(this.Environment.ContentRootPath)
                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-               .AddJsonFile($"appsettings.{Environment.EnvironmentName}.json", optional: false, reloadOnChange: true)
+               .AddJsonFile($"appsettings.{this.Environment.EnvironmentName}.json", optional: false, reloadOnChange: true)
                .AddEnvironmentVariables();
 
-            Configuration = b2.Build();
+            this.Configuration = b2.Build();
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
+                .ReadFrom.Configuration(this.Configuration)
+
                 // Log out to app insights if thats your thing
                 // .WriteTo.ApplicationInsights(TelemetryConverter.Events)
                 .Enrich.WithMachineName()
@@ -49,56 +52,70 @@ namespace AFI.API
             Serilog.Debugging.SelfLog.Enable(Console.Error);
 
             // Log out the environment
-            Log.Logger.Information($"Current evironment: {Environment.EnvironmentName}");
+            Log.Logger.Information($"Current evironment: {this.Environment.EnvironmentName}");
         }
+
         public IConfiguration Configuration { get; }
+
         public IWebHostEnvironment Environment { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services">Global services collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-
-            ConfigureVersioning(services);
-            ConfigureCors(services);
-            ConfigureSwagger(services);
-            ConfigureDataContexts(services);
-            ConfigureApplicationInsights(services);
-            ConfigureIoC(services);
+            this.ConfigureVersioning(services);
+            this.ConfigureCors(services);
+            this.ConfigureSwagger(services);
+            this.ConfigureApplicationInsights(services);
+            this.ConfigureIoC(services);
 
             services.AddControllers();
         }
 
+        /// <summary>
+        /// Configures MVC Versioning for API.
+        /// </summary>
+        /// <param name="services">Global services for application.</param>
         public void ConfigureVersioning(IServiceCollection services)
         {
             services.AddApiVersioning(x =>
             {
-                // Minor only for now 
+                // Minor only for now
                 x.DefaultApiVersion = new ApiVersion(0, 1);
 
                 // Fallback to default
                 x.AssumeDefaultVersionWhenUnspecified = true;
+
                 // Should be altered in prod unless not external
                 x.ReportApiVersions = true;
             });
         }
+
+        /// <summary>
+        /// Configure  CORS for API.
+        /// </summary>
+        /// <param name="services">Global services for application.</param>
         public void ConfigureCors(IServiceCollection services)
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(name: "AFI Global",
-                                  builder =>
-                                  {
-                                      builder.AllowAnyHeader();
-                                      builder.WithMethods("GET", "POST", "PUT", "DELETE");
-                                      builder.AllowAnyOrigin();
-                                  });
+                options.AddPolicy(
+                    name: "AFI Global",
+                    builder =>
+                    {
+                        builder.AllowAnyHeader();
+                        builder.WithMethods("GET", "POST", "PUT", "DELETE");
+                        builder.AllowAnyOrigin();
+                    });
             });
-
-            //services.Configure<MvcOptions>(options =>
-            //{
-            //    options.Filters.Add(new CorsAuthorizationFilterFactory("AllowAll"));
-            //});
         }
+
+        /// <summary>
+        /// Configure SWagger documentation.
+        /// </summary>
+        /// <param name="services">Global services for application.</param>
         public void ConfigureSwagger(IServiceCollection services)
         {
             services.AddSwaggerGen(options =>
@@ -119,32 +136,52 @@ namespace AFI.API
                     {
                         Name = "Use under LICX",
                         Url = new Uri("https://google.com"),
-                    }
+                    },
                 });
 
                 options.EnableAnnotations();
             });
         }
+
+        /// <summary>
+        /// Configure data context (EF.CORE Context).
+        /// </summary>
+        /// <param name="services">Global services for application.</param>
         public void ConfigureDataContexts(IServiceCollection services)
         {
-            services.AddDbContext<AFIContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:databaseConnection"]));
+            services.AddDbContext<AFIContext>(options => options.UseSqlServer(this.Configuration["ConnectionStrings:databaseConnection"]));
+
             // Remove this for prod by checking environment
-            Log.Logger.Information($"DB Connection made to { Configuration.GetConnectionString("ConnectionStrings:databaseConnection")}");
+            Log.Logger.Information($"DB Connection made to {this.Configuration.GetConnectionString("ConnectionStrings:databaseConnection")}");
         }
+
+        /// <summary>
+        /// Setup Application insights.
+        /// </summary>
+        /// <param name="services">Global services for application.</param>
         public void ConfigureApplicationInsights(IServiceCollection services)
         {
             services.AddApplicationInsightsTelemetry();
         }
+
+        /// <summary>
+        /// Configure repositories.
+        /// </summary>
+        /// <param name="services">Global services for application.</param>
         public void ConfigureIoC(IServiceCollection services)
         {
             services.AddScoped<IPolicyHolderRepository, PolicyHolderRepository>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app">Passed through by .NET Core - Application configuration elements</param>
+        /// <param name="env">Web Hosting Environment</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             var serverAddressFeature = app.ServerFeatures.Get<IServerAddressesFeature>();
-            Log.Logger.Information($"Service is listening on {(String.Join(", ", serverAddressFeature.Addresses))}");
+            Log.Logger.Information($"Service is listening on {string.Join(", ", serverAddressFeature.Addresses)}");
 
             if (env.IsDevelopment())
             {
@@ -152,9 +189,9 @@ namespace AFI.API
                 app.UseSwagger();
                 app.UseSwaggerUI(options =>
                 {
-                    options.SwaggerEndpoint(Configuration["Swagger:Endpoint:Url"], Configuration["Swagger:Endpoint:Name"]);
-                    options.OAuthClientId(Configuration["ClientId"]);
-                    options.OAuthAppName(Configuration["Swagger:Endpoint:Name"]);
+                    options.SwaggerEndpoint(this.Configuration["Swagger:Endpoint:Url"], this.Configuration["Swagger:Endpoint:Name"]);
+                    options.OAuthClientId(this.Configuration["ClientId"]);
+                    options.OAuthAppName(this.Configuration["Swagger:Endpoint:Name"]);
                 });
             }
             else
@@ -163,7 +200,6 @@ namespace AFI.API
                 app.UseHsts();
                 app.UseHttpsRedirection();
             }
-
 
             app.UseRouting();
             app.UseEndpoints(endpoints =>

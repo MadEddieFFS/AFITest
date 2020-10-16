@@ -65,3 +65,4 @@ The Unit Testing is a flavour of what would be required. Within the timescale of
 
 I would normally create a full Base Entity and Base Repository to inherit from. This is a example implementation.
 
+I would fully implement SeriLog to output to a variety of sinks. Such as perhaps Application Insights, DataDog, local XML files(not recommended), Elastic Stack, SQL database

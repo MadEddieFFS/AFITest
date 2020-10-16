@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿// <copyright file="NewPolicyHolderResponse.cs" company="Mad Eddie Designs">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace AFI.API.Controllers.PolicyHolder.Response
 {
+    /// <summary>
+    /// controller class.
+    /// </summary>
     public class NewPolicyHolderResponse
     {
+        /// <summary>
+        /// Customer ID.
+        /// </summary>
         public int? CustomerId { get; set; }
     }
 }
